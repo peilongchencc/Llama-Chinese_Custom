@@ -145,3 +145,58 @@ RLHF（Reinforcement Learning from Human Feedback--从人的反馈中强化学�
 | SFT  | 1. 启动简单，仅需要问答对数据就可以进行训练；<br>2. 训练简单，直接对LLM进行调参，大部分情况下，训练几个epoch就可达到预期；<br>3. 显存资源相比于RLHF来说耗费低。 | 1. 模型的效果非常依赖于SFT数据的质量，天花板取决于SFT数据标注的质量；<br>2. 对标注要求高，对一条指令来说，要标注很高质的回答其实是一件非常困难的事情，既耗时又耗力。|
 | RLHF | 1. 直接利用人类偏好来进行指导大模型的训练，使大模型的输出更能满足人们的要求；<br>2. 在安全性和事实性上，都能有很大的提升。| 1. 训练消耗大量的显存；<br>2. 训练的过程中很不稳定，想要成功的完成PPO的训练不是那么容易的事情；<br>3. 除了SFT阶段的数据，还得标注Reward model的数据。在对齐人类偏好的过程中，标谁更好比较容易，但是想标谁比谁好多少，又差多少，这不是件容易的事情。|
 
+## 权重融合:
+
+如何将自己训练的lora和原有的权重进行融合？<br>
+
+![](./pictures/weight_fusion_lora.jpg)
+
+## LoRA和QLoRA:
+
+QLoRA比原版LoRA增加了量化机制，使得微调需要的显存更小。<br>
+
+## Llama-Chinese如何int4量化(quantize)，并保存模型:
+
+> "quantize"的读音为 /ˈkwɒn.taɪz/ (美式英语)，意思为 "量化"。
+
+Llama-Chinese项目开发人员: 可以参考以下项目进行量化并保存模型:<br>
+
+```txt
+https://github.com/PanQiWei/AutoGPTQ
+```
+
+## Llama-Chinese微调支持多轮问答语料吗？
+
+提问者: 示例中的微调语料是一问一答形式的，多轮问答的语料支持吗？如何进行语料构建？<br>
+
+Llama-Chinese项目开发人员: 可以支持多轮语料，就将单轮的拼接在一起就可以,例如:<br>
+
+```txt
+<s>Human: 内容1\n</s><s>Assistant: 内容2\n</s><s>Human: 内容3\n</s><s>Assistant: 内容4\n</s>
+```
+
+## Llama-Chinese怎样实现stream流式输出？
+
+Llama-Chinese项目开发人员: 可以的，参考这个:<br>
+
+```txt
+https://github.com/FlagAlpha/Llama2-Chinese/blob/main/examples/chat_gradio.py
+```
+
+## 针对Llama-Chinese想用自己领域语料全量预训练需要怎么做:
+
+Llama-Chinese项目开发人员: 可以参考hf 上的train clm，网址如下: <br>
+
+```txt
+https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_clm.py
+```
+
+## SHA 256对比:
+
+提问者: "下载了国内地址的7b模型后, 用最新的llama.cpp convert会出错, 怀疑是下载过程中出错了, 能否提供下各个模型的sha256 方便对比"，这句话中的 "sha256" 是什么意思？<br>
+
+解答:<br>
+
+"sha256"指的是SHA-256，即安全哈希算法（Secure Hash Algorithm）256位版本的缩写。它是一种加密哈希函数，可以将任意长度的数据转换成一个固定长度（256位、32字节）的唯一散列值（或哈希值）。这个散列值通常用一个64位的十六进制字符串来表示。<br>
+
+在文件下载和软件分发中，SHA-256常被用来验证数据完整性。提供文件的SHA-256散列值可以帮助用户检查下载的文件是否未经修改且未损坏，从而确保下载的文件是原始的、可信的。用户可以在本地计算下载文件的SHA-256值，并将其与官方网站提供的SHA-256散列值进行比较。如果两个散列值匹配，就意味着文件完整且未被篡改；如果不匹配，则文件可能在传输过程中被损坏或被恶意修改。<br>
