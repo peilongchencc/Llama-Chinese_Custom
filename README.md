@@ -383,6 +383,12 @@ docker-compose up -d --build
 
 根据[requirements.txt](https://github.com/LlamaFamily/Llama-Chinese/blob/main/requirements.txt)安装对应的环境依赖。
 
+项目 requirements.txt 中没有给出 `deepspeed` 的安装，`deepspeed` 的安装方式如下:<br>
+
+```bash
+pip install deepspeed
+```
+
 ### Step2: 数据准备
 在data目录下提供了一份用于模型sft的数据样例：
 - 训练数据：[data/train_sft.csv](https://github.com/LlamaFamily/Llama-Chinese/blob/main/data/train_sft.csv)
@@ -396,6 +402,8 @@ docker-compose up -d --build
 ```
 <s>Human: 用一句话描述地球为什么是独一无二的。</s><s>Assistant: 因为地球是目前为止唯一已知存在生命的行星。</s>
 ```
+
+Ps: `<s>` 和 `</s>`是自定义的标识，其他大语言模型可能用的其他标识，例如 `<p>`。类似Bert用特殊字符 `[SEP]` 区分前后输入。
 
 ### Step3: 微调脚本
 
@@ -531,6 +539,11 @@ Llama2-7B-Chat的测试结果见[meta_eval_7B.md](assets/meta_eval_7B.md)，Llam
 
 通过测试我们发现，Meta原始的Llama2 Chat模型对于中文问答的对齐效果一般，大部分情况下都不能给出中文回答，或者是中英文混杂的形式。因此，基于中文数据对Llama2模型进行训练和微调十分必要，我们的中文版Llama2模型也已经在训练中，近期将对社区开放。
 
+笔者搜寻的对 "对齐" 对解释:<br>
+
+对齐是openai提出的概念，openai表示gpt4以后的产品的重心，是打造人类意图对齐团队。从此这个词就暴热了，到处都在跟风说对齐。各人都有不同理解，见仁见智吧，至于它的原始准确含义，恐怕只有等gpt5出来那一天。搞不好到时全世界会来句“我们猜错了”也说不定【抠鼻】。<br>
+
+对齐，我理解是就通过微调模型，通过我们的输入，召回我们期望的输出，减少输出的噪音。--Llama-Chinese项目人员。<br>
 
 ## 💪 外延能力
 

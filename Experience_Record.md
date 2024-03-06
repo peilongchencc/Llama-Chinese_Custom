@@ -1,3 +1,55 @@
+# Llama-Chinese 学习经验记录
+
+
+## python装饰器`@dataclass`的作用:
+
+### dataclass的常规使用:
+
+`@dataclass` 是 Python 中的一个装饰器，用于自动添加特殊方法，包括 `__init__()`、`__repr__()`、`__eq__()` 和 `__hash__()` 等到用户定义的类中，以减少样板代码。这个装饰器位于 `dataclasses` 模块中，该模块在 Python 3.7 及更高版本中可用。<br>
+
+使用 `@dataclass` 装饰器的主要优点是它允许你定义一个类，专注于类的属性，而不必编写用于初始化属性、比较对象等常见方法的代码。这使得代码更加简洁、易读，并减少了出错的可能性。<br>
+
+下面是一个使用 `@dataclass` 装饰器的例子：<br>
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class InventoryItem:
+    """Class for keeping track of an item in inventory."""
+    name: str
+    unit_price: float
+    quantity_on_hand: int = 0
+
+    def total_cost(self) -> float:
+        return self.unit_price * self.quantity_on_hand
+```
+
+在这个例子中，`InventoryItem` 类自动获得了一个 `__init__()` 方法，该方法接受 `name`、`unit_price` 和 `quantity_on_hand` 作为参数（`quantity_on_hand` 有一个默认值）。此外，还自动实现了 `__repr__()` 方法，用于提供对象的字符串表示，以及 `__eq__()` 方法，用于比较两个对象是否相等。<br>
+
+简而言之，`@dataclass` 装饰器是一个非常有用的工具，可以帮助开发者以声明性的方式定义数据持有类，同时减少必须编写的样板代码数量。<br>
+
+### field函数--metadata:
+
+`field` 函数用于为类属性指定额外的配置或元数据。其中 `metadata` 通常用于携带与字段相关的信息，这些信息可能对开发者或其他系统组件在运行时或分析代码时有用。有点类似于注释，但注释在运行时不可用，`metadata` 中的信息在运行时是可以访问的。<br>
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class Product:
+    name: str
+    price: float = field(default=100, metadata={"unit": "USD", "description": "Price in US dollars"})
+
+# 访问字段的默认值
+default_price = Product.__dataclass_fields__['price'].default
+print(default_price)  # 输出: 100
+
+# 访问字段的 metadata
+field_info = Product.__dataclass_fields__['price'].metadata
+print(field_info['description'])  # 输出: Price in US dollars
+```
+
 ## 有监督微调(SFT)的概念:
 
 SFT（Supervised Fine-Tuning）监督微调是指在源数据集上预训练一个神经网络模型( 无监督方式 )，即源模型。然后创建一个新的神经网络模型，即目标模型。目标模型复制了源模型上除了输出层外的所有模型设计及其参数，训练方式为有监督方式(SFT)。<br>
@@ -73,8 +125,7 @@ answer: 什么是预训练
 总的来说，无监督训练中的输入是文本序列的一部分，而输出是序列中紧随其后的词或标记。这种训练方式使模型能够捕捉语言的复杂规律和结构，从而在没有明确答案的情况下生成文本或完成其他语言任务。<br>
 
 
-
-RLHF是什么？RLHF中的 reward model 是什么？
+## RLHF是什么？RLHF中的 reward model 是什么？
 
 RLHF（Reinforcement Learning from Human Feedback--从人的反馈中强化学习）是一种结合了多种技术的机器学习方法，旨在通过人类反馈改善强化学习模型的性能和行为。这种方法特别适用于那些难以为其设计明确奖励函数的情境，或者在复杂环境中，直接的奖励信号不足以引导学习过程的场景。RLHF通常包括以下几个步骤或组件：
 
